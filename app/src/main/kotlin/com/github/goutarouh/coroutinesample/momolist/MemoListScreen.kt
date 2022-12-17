@@ -102,14 +102,15 @@ private fun MemoCard(
     onClickMemo: (String) -> Unit
 ) {
     Card(
-        modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp).fillMaxWidth()
+        modifier = Modifier
+            .padding(horizontal = 4.dp, vertical = 8.dp)
+            .fillMaxWidth()
+            .clickable { onClickMemo(memo.memoId) }
     ) {
         Column {
             Text(
-                text = "${memo.title}",
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable { onClickMemo(memo.memoId) }
+                text = memo.title,
+                modifier = Modifier.padding(8.dp)
             )
         }
     }
