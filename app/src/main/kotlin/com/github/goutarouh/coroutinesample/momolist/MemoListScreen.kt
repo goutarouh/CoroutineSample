@@ -45,7 +45,7 @@ private fun MemoCard(
     onClickMemo: (String) -> Unit
 ) {
     Text(
-        text = "MemoCard",
+        text = "MemoCard${id}",
         modifier = Modifier
             .padding(8.dp)
             .clickable { onClickMemo(id) }
