@@ -18,7 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         setContent {
             MaterialTheme {
@@ -66,7 +65,12 @@ fun Navigation() {
         }
         composable(NavDest.MemoDetail.destId) {
             val memoId = it.arguments?.getString("memoId")!!
-            MemoDetailScreen(id = memoId)
+            MemoDetailScreen(
+                memoId = memoId,
+                onClickDeleteButton = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

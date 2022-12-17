@@ -7,10 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.github.goutarouh.coroutinesample.data.Memo
 import com.github.goutarouh.coroutinesample.data.MemoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class MemoDetailViewModel @Inject constructor(
@@ -35,6 +36,21 @@ class MemoDetailViewModel @Inject constructor(
                 _memoDetailState.emit(MemoDetailState.Success(memo))
             } else {
                 _memoDetailState.emit(MemoDetailState.Error(result.exceptionOrNull()))
+            }
+        }
+    }
+
+    fun deleteMemoThenDoAction(
+        memoId: String,
+        action: () -> Unit,
+        actionCoroutineContext: CoroutineContext = Dispatchers.Main
+    ) {
+        viewModelScope.launch {
+            val result = memoRepository.deleteMemo(memoId)
+            if (result.isSuccess) {
+                withContext(actionCoroutineContext) {
+                    action()
+                }
             }
         }
     }
