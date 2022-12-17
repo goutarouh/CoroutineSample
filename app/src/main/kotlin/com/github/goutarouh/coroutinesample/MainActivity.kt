@@ -1,4 +1,4 @@
-package com.github.goutarouh.baseandroidproject
+package com.github.goutarouh.coroutinesample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.github.goutarouh.baseandroidproject.data
+package com.github.goutarouh.coroutinesample.data
 
 import org.junit.Test
 
