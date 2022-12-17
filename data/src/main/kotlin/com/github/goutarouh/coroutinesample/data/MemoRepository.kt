@@ -12,6 +12,7 @@ interface MemoRepository {
     fun getMemos(): Flow<List<Memo>>
     suspend fun getMemo(memoId: String): Result<Memo>
     suspend fun insertMemo(memo: Memo): Result<Unit>
+    suspend fun deleteMemo(memoId: String): Result<Unit>
 }
 
 class MemoRepositoryImpl(
@@ -37,6 +38,15 @@ class MemoRepositoryImpl(
     override suspend fun insertMemo(memo: Memo): Result<Unit> = withContext(coroutineContext) {
         return@withContext try {
             memoDao.insertMemo(memo.toMemoEntity())
+            Result.success(Unit)
+        } catch (e: IOException) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteMemo(memoId: String): Result<Unit> = withContext(coroutineContext) {
+        return@withContext try {
+            memoDao.deleteMemo(memoId)
             Result.success(Unit)
         } catch (e: IOException) {
             Result.failure(e)
