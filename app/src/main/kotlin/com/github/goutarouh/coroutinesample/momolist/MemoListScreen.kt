@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -18,6 +22,7 @@ import com.github.goutarouh.coroutinesample.data.Memo
 @Composable
 fun MemoListScreen(
     onClickMemo: (String) -> Unit,
+    onClickMemoAddButton: () -> Unit,
     viewModel: MemoListViewModel = hiltViewModel()
 ) {
 
@@ -36,6 +41,12 @@ fun MemoListScreen(
                 )
             }
         }
+        MemoAddButton(
+            onClick = onClickMemoAddButton,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 24.dp, end = 24.dp)
+        )
     }
 }
 
@@ -101,4 +112,20 @@ private fun MemoCard(
             .padding(8.dp)
             .clickable { onClickMemo(memo.memoId) }
     )
+}
+
+@Composable
+private fun MemoAddButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FloatingActionButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = null
+        )
+    }
 }

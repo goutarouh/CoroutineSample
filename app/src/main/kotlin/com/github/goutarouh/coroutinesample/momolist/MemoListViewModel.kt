@@ -5,10 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goutarouh.coroutinesample.data.Memo
 import com.github.goutarouh.coroutinesample.data.MemoRepository
-import com.github.goutarouh.coroutinesample.data.MemoRepositoryImpl
-import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
