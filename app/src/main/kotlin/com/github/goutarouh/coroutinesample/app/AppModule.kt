@@ -1,6 +1,7 @@
 package com.github.goutarouh.coroutinesample.app
 
 import com.github.goutarouh.coroutinesample.data.MemoRepository
+import com.github.goutarouh.coroutinesample.data.MemoRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +13,7 @@ object AppModule {
 
     @Provides
     fun memoRepository(): MemoRepository {
-        return MemoRepository()
+        return MemoRepositoryImpl()
     }
 
 }

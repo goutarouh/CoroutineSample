@@ -5,49 +5,100 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.goutarouh.coroutinesample.data.Memo
 
 @Composable
 fun MemoListScreen(
     onClickMemo: (String) -> Unit,
-    viewModel: MemoListViewModel = viewModel()
+    viewModel: MemoListViewModel = hiltViewModel()
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        MemoListContents() { memoId ->
-            onClickMemo(memoId)
-        }
-    }
-}
 
-@Composable
-private fun MemoListContents(
-    onClickMemo: (String) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        repeat(10) {
-            MemoCard("$it") { memoId ->
-                onClickMemo(memoId)
+    val state = viewModel.memoListState.collectAsState()
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (val memoListState = state.value) {
+            is MemoListState.Loading -> {
+                Loading(modifier = Modifier.align(Alignment.Center))
+            }
+            is MemoListState.Error -> {}
+            is MemoListState.Success -> {
+                Success(
+                    memoList = memoListState.memoList,
+                    onClickMemo = onClickMemo
+                )
             }
         }
     }
 }
 
 @Composable
+private fun Loading(
+    modifier: Modifier = Modifier
+) {
+    CircularProgressIndicator(modifier)
+}
+
+@Composable
+private fun Success(
+    memoList: List<Memo>,
+    modifier: Modifier = Modifier,
+    onClickMemo: (String) -> Unit,
+) {
+    if (memoList.isEmpty()) {
+        MemoListEmptyContents(
+            modifier = modifier
+        )
+    } else {
+        MemoListContents(
+            memoList = memoList,
+            onClickMemo = onClickMemo,
+            modifier = modifier
+        )
+    }
+}
+
+@Composable
+private fun MemoListEmptyContents(
+    modifier: Modifier
+) {
+    Text(
+        text = "メモがありません",
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun MemoListContents(
+    memoList: List<Memo>,
+    onClickMemo: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        memoList.forEach {
+            MemoCard(memo = it, onClickMemo = onClickMemo)
+        }
+    }
+}
+
+@Composable
 private fun MemoCard(
-    id: String,
+    memo: Memo,
     onClickMemo: (String) -> Unit
 ) {
     Text(
-        text = "MemoCard${id}",
+        text = "MemoCard${memo.memoId}",
         modifier = Modifier
             .padding(8.dp)
-            .clickable { onClickMemo(id) }
+            .clickable { onClickMemo(memo.memoId) }
     )
 }

@@ -1,11 +1,25 @@
 package com.github.goutarouh.coroutinesample.data
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
-class MemoRepository {
+interface MemoRepository {
+    fun getMemos(): Flow<List<Memo>>
+    suspend fun getMemo(memoId: String): Result<Memo>
+}
 
-    suspend fun getMemo(memoId: String): Result<Memo> {
+class MemoRepositoryImpl: MemoRepository {
+
+    override fun getMemos(): Flow<List<Memo>> {
+        return flow {
+            delay(2000)
+            emit(MEMO_LIST)
+        }
+    }
+
+    override suspend fun getMemo(memoId: String): Result<Memo> {
         val random = (0..20).random()
         return try {
             delay(2000)
