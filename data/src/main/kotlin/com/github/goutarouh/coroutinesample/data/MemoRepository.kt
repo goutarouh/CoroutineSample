@@ -1,50 +1,46 @@
 package com.github.goutarouh.coroutinesample.data
 
-import kotlinx.coroutines.delay
+import com.github.goutarouh.coroutinesample.data.room.memo.MemoDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import java.io.IOException
+import kotlin.coroutines.CoroutineContext
 
 interface MemoRepository {
     fun getMemos(): Flow<List<Memo>>
     suspend fun getMemo(memoId: String): Result<Memo>
+    suspend fun insertMemo(memo: Memo): Result<Unit>
 }
 
-class MemoRepositoryImpl: MemoRepository {
+class MemoRepositoryImpl(
+    private val memoDao: MemoDao,
+    private val coroutineContext: CoroutineContext = Dispatchers.IO
+): MemoRepository {
 
     override fun getMemos(): Flow<List<Memo>> {
-        return flow {
-            delay(2000)
-            emit(MEMO_LIST)
+        return memoDao.getMemoList().map { memoEntityList ->
+            memoEntityList.map { it.toMemo() }
         }
     }
 
-    override suspend fun getMemo(memoId: String): Result<Memo> {
-        val random = (0..20).random()
-        return try {
-            delay(2000)
-            if (random < 16) {
-                Result.success(MEMO_LIST.first { it.memoId == memoId })
-            } else {
-                throw IOException()
-            }
+    override suspend fun getMemo(memoId: String): Result<Memo> = withContext(coroutineContext) {
+        return@withContext try {
+            val memo = memoDao.getMemo(memoId).toMemo()
+            Result.success(memo)
         } catch (e: IOException) {
             Result.failure(e)
-        } catch (e: NoSuchElementException) {
+        }
+    }
+
+    override suspend fun insertMemo(memo: Memo): Result<Unit> = withContext(coroutineContext) {
+        return@withContext try {
+            memoDao.insertMemo(memo.toMemoEntity())
+            Result.success(Unit)
+        } catch (e: IOException) {
             Result.failure(e)
         }
     }
 
-}
-
-private val MEMO_LIST = mutableListOf<Memo>().apply {
-    repeat(10) {
-        add(
-            Memo(
-                memoId = "$it",
-                title = "メモ${it}",
-                contents = "これはメモ${it}の内容です。"
-            )
-        )
-    }
 }

@@ -58,7 +58,11 @@ fun Navigation() {
             )
         }
         composable(NavDest.MemoAdd.destId) {
-            MemoAddScreen()
+            MemoAddScreen(
+                onClickNavigateMemoListButton = {
+                    navController.singleNavigate(NavDest.MemoList.destId, NavDest.MemoList.destId, true)
+                }
+            )
         }
         composable(NavDest.MemoDetail.destId) {
             val memoId = it.arguments?.getString("memoId")!!
@@ -67,8 +71,16 @@ fun Navigation() {
     }
 }
 
-fun NavHostController.singleNavigate(destId: String) {
+fun NavHostController.singleNavigate(
+    destId: String, popUpToDestId: String? = null, inclusive: Boolean = false
+) {
     if (currentDestination?.route != destId) {
-        navigate(destId)
+        navigate(destId) {
+            if (popUpToDestId != null) {
+                popUpTo(popUpToDestId) {
+                    this.inclusive = inclusive
+                }
+            }
+        }
     }
 }

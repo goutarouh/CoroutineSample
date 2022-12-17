@@ -1,14 +1,8 @@
 package com.github.goutarouh.coroutinesample.momolist
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -37,7 +31,8 @@ fun MemoListScreen(
             is MemoListState.Success -> {
                 Success(
                     memoList = memoListState.memoList,
-                    onClickMemo = onClickMemo
+                    onClickMemo = onClickMemo,
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
         }
@@ -106,12 +101,18 @@ private fun MemoCard(
     memo: Memo,
     onClickMemo: (String) -> Unit
 ) {
-    Text(
-        text = "MemoCard${memo.memoId}",
-        modifier = Modifier
-            .padding(8.dp)
-            .clickable { onClickMemo(memo.memoId) }
-    )
+    Card(
+        modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp).fillMaxWidth()
+    ) {
+        Column {
+            Text(
+                text = "${memo.title}",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clickable { onClickMemo(memo.memoId) }
+            )
+        }
+    }
 }
 
 @Composable
