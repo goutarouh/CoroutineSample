@@ -22,7 +22,7 @@ class MemoAddViewModel @Inject constructor(
     fun saveMemo() {
         viewModelScope.launch {
             _memoAddState.emit(MemoAddState.Loading)
-            val result = memoRepository.insertMemo(MEMO)
+            val result = memoRepository.insertMemo(Memo.create())
             if (result.isSuccess) {
                 _memoAddState.emit(MemoAddState.SaveSuccess)
             } else {
@@ -50,8 +50,3 @@ sealed interface MemoAddState {
     }
     object SaveSuccess: MemoAddState
 }
-
-private val MEMO = Memo(
-    title = "これはメモです ${LocalDateTime.now()}",
-    contents = "これはメモのコンテンツです。これはメモのコンテンツです。"
-)
