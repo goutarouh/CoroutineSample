@@ -15,7 +15,7 @@ class MemoListViewModel @Inject constructor(
     private val memoRepository: MemoRepository,
 ): ViewModel() {
 
-    val memoListState = memoRepository.getMemos()
+    val memoListState = memoRepository.memos
         .map {
             MemoListState.Success(it)
         }

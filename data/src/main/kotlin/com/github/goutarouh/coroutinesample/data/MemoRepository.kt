@@ -9,7 +9,7 @@ import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
 interface MemoRepository {
-    fun getMemos(): Flow<List<Memo>>
+    val memos: Flow<List<Memo>>
     suspend fun getMemo(memoId: String): Result<Memo>
     suspend fun insertMemo(memo: Memo): Result<Unit>
     suspend fun deleteMemo(memoId: String): Result<Unit>
@@ -20,10 +20,8 @@ class MemoRepositoryImpl(
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ): MemoRepository {
 
-    override fun getMemos(): Flow<List<Memo>> {
-        return memoDao.getMemoList().map { memoEntityList ->
-            memoEntityList.map { it.toMemo() }
-        }
+    override val memos: Flow<List<Memo>> = memoDao.getMemoList().map { memoEntityList ->
+        memoEntityList.map { it.toMemo() }
     }
 
     override suspend fun getMemo(memoId: String): Result<Memo> = withContext(coroutineContext) {
