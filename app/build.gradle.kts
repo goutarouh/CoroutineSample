@@ -70,6 +70,9 @@ dependencies {
     implementation(libs.navigation.compose)
 
     implementation(project(path = ":data"))
+
+    // UnitTest
+    testImplementation(libs.kotlin.coroutine.test)
 }
 
 kapt {
