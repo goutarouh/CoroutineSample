@@ -17,7 +17,10 @@ class MemoListViewModel @Inject constructor(
 
     val memoListState = memoRepository.memos
         .map {
-            MemoListState.Success(it)
+            MemoListState.Success(it) as MemoListState
+        }
+        .catch { e ->
+            emit(MemoListState.Error(e))
         }
         .stateIn(
             scope = viewModelScope,
