@@ -76,7 +76,7 @@ private val MEMO_LIST = listOf(
     Memo(title = "memo2"),
 )
 
-private abstract class FakeMemoRepository: MemoRepository {
+abstract class FakeMemoRepository: MemoRepository {
     override val memos: Flow<List<Memo>>
         get() = TODO("Not yet implemented")
     override suspend fun getMemo(memoId: String): Result<Memo> {
